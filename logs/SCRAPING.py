@@ -127,7 +127,7 @@ while H < len(link_songs2):
     soupsong  =   BeautifulSoup(oona, "html.parser")
     soupsong2 =   BeautifulSoup(oona, "html.parser")
     #print soupsong.prettify()
-    number_list.append(H) 
+    number_list.append(H+1) 
     conect = soupsong.find('a', {'target' : '_blank' , 'class' : 'btn-u btn-block btn-u margin-bottom-10'})
 
     link_song_spotify_temp.append(conect.get('href'))
