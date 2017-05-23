@@ -117,7 +117,7 @@ print name_songs2
 
 link_song_spotify_temp = []
 link_song_spotify_def  = []
-
+id_list = []
 H = 0
 
 while H < len(link_songs2):
@@ -131,20 +131,12 @@ while H < len(link_songs2):
     link_song_spotify_temp.append(conect.get('href'))
     value = link_song_spotify_temp[H]
     link_song_spotify_def.append(value.encode("utf-8"))
+    id_list.append(value[31:])
+    print id_list[H]
     print link_song_spotify_temp[H]
     H = H + 1
 
-print link_song_spotify_def
-
-#conect2 = conect.get_text
-
-
-
-#div = soupsong.find_all('div', {'class' : 'info', 'id' : 'track-artist', 'class' : 'creator'})
-
-#print div
-
-
+#print link_song_spotify_def
 
 
 
@@ -155,4 +147,4 @@ print link_song_spotify_def
 
 with open('PLAYLIST: DEEP FOCUS [379].csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows(izip(name_songs2, link_songs2, link_song_spotify_def))
+    writer.writerows(izip(name_songs2, link_songs2, link_song_spotify_def, id_list))
