@@ -115,10 +115,44 @@ while count < len(name_songs):
 print "SONG NAMES UTF-8..............................."
 print name_songs2
 
+link_song_spotify_temp = []
+link_song_spotify_def  = []
+
+H = 0
+
+while H < len(link_songs2):
+    ulrsong   =   link_songs2[H]
+    oona    =   urllib.urlopen(ulrsong).read()
+    soupsong  =   BeautifulSoup(oona, "html.parser")
+    #print soupsong.prettify()
+
+    conect = soupsong.find('a', {'target' : '_blank' , 'class' : 'btn-u btn-block btn-u margin-bottom-10'})
+
+    link_song_spotify_temp.append(conect.get('href'))
+    value = link_song_spotify_temp[H]
+    link_song_spotify_def.append(value.encode("utf-8"))
+    print link_song_spotify_temp[H]
+    H = H + 1
+
+print link_song_spotify_def
+
+#conect2 = conect.get_text
+
+
+
+#div = soupsong.find_all('div', {'class' : 'info', 'id' : 'track-artist', 'class' : 'creator'})
+
+#print div
+
+
+
+
+
+
 
 # SAVING IT IN CSV
 
 
 with open('PLAYLIST: DEEP FOCUS [379].csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows(izip(name_songs2, link_songs2))
+    writer.writerows(izip(name_songs2, link_songs2, link_song_spotify_def))
