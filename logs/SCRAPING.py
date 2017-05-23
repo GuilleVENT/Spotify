@@ -115,6 +115,7 @@ while count < len(name_songs):
 print "SONG NAMES UTF-8..............................."
 print name_songs2
 
+number_list = []
 link_song_spotify_temp = []
 link_song_spotify_def  = []
 id_list = []
@@ -124,16 +125,22 @@ while H < len(link_songs2):
     ulrsong   =   link_songs2[H]
     oona    =   urllib.urlopen(ulrsong).read()
     soupsong  =   BeautifulSoup(oona, "html.parser")
+    soupsong2 =   BeautifulSoup(oona, "html.parser")
     #print soupsong.prettify()
-
+    number_list.append(H) 
     conect = soupsong.find('a', {'target' : '_blank' , 'class' : 'btn-u btn-block btn-u margin-bottom-10'})
 
     link_song_spotify_temp.append(conect.get('href'))
     value = link_song_spotify_temp[H]
     link_song_spotify_def.append(value.encode("utf-8"))
     id_list.append(value[31:])
-    print id_list[H]
-    print link_song_spotify_temp[H]
+#    print id_list[H]
+#    print link_song_spotify_temp[H]
+
+    conect2 = soupsong2.find('div', {'class' : 'track-row-number'})
+#    conect3 = conect2(text)
+    print conect2
+    
     H = H + 1
 
 #print link_song_spotify_def
@@ -147,4 +154,4 @@ while H < len(link_songs2):
 
 with open('PLAYLIST: DEEP FOCUS [379].csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows(izip(name_songs2, link_songs2, link_song_spotify_def, id_list))
+    writer.writerows(izip(number_list, name_songs2, link_songs2, link_song_spotify_def, id_list))
