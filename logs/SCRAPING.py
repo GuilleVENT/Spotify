@@ -119,14 +119,38 @@ number_list = []
 link_song_spotify_temp = []
 link_song_spotify_def  = []
 id_list = []
+name_artist = []
+name_artist_def =[] 
+name_artist_utf8 = []
 H = 0
 
 while H < len(link_songs2):
     ulrsong   =   link_songs2[H]
     oona    =   urllib.urlopen(ulrsong).read()
     soupsong  =   BeautifulSoup(oona, "html.parser")
-    soupsong2 =   BeautifulSoup(oona, "html.parser")
-    #print soupsong.prettify()
+#    soupsong2 =   BeautifulSoup(oona, "html.parser")
+    
+    name[H] = soupsong.title.string
+    name_artist = name[H]
+    guion_count = name_artist.count('-')
+    if guion_count == 2:
+    	guion = name_artist.index('-')
+    	name_artist_def.append(name_artist[guion:])
+    else:
+    	guion = name_artist.index('-')
+    	temp6 = name_artist[guion:]
+    	guion2 = temp6.index('-')
+    	name_artist_def.append(temp6[guion2:])
+
+    
+    
+    temp7 = name_artist_def[H]
+    temp8 = temp7[:-17]
+    name_artist_def[H] = temp8[2:]
+    name_artist_ = name_artist_def[H]
+    name_artist_utf8.append(name_artist_.encode("utf-8"))
+    print name_artist_def[H]
+
     number_list.append(H+1) 
     conect = soupsong.find('a', {'target' : '_blank' , 'class' : 'btn-u btn-block btn-u margin-bottom-10'})
 
@@ -134,24 +158,25 @@ while H < len(link_songs2):
     value = link_song_spotify_temp[H]
     link_song_spotify_def.append(value.encode("utf-8"))
     id_list.append(value[31:])
-#    print id_list[H]
-#    print link_song_spotify_temp[H]
+    print id_list[H]
+    print link_song_spotify_temp[H]
 
-    conect2 = soupsong2.find('div', {'class' : 'track-row-number'})
-#    conect3 = conect2(text)
-    print conect2
-    
     H = H + 1
-
+'''
 #print link_song_spotify_def
-
-
-
+P=0
+while P < len(link_songs2):
+    urlurl = link_songs2[P]
+    brandy = urllib.urlopen(urlurl).read()
+    soupdos = BeautifulSoup(brandy, "html.parser")
+    conect2 = soupdos.find('span' , {'id':'config' , 'class':'hide'})
+    print conect2
+'''
 
 
 # SAVING IT IN CSV
-
+print name_artist_utf8
 
 with open('PLAYLIST: DEEP FOCUS [379].csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows(izip(number_list, name_songs2, link_songs2, link_song_spotify_def, id_list))
+    writer.writerows(izip(number_list, name_songs2, name_artist_utf8, link_songs2, link_song_spotify_def, id_list))
