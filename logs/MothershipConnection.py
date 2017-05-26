@@ -148,7 +148,7 @@ def Snoopy(url , name_csv):
         ulrsong   =   link_songs2[H]
         oona    =   urllib.urlopen(ulrsong).read()
         soupsong  =   BeautifulSoup(oona, "html.parser")
-
+        '''
         ######## ARTIST NAME ########
         name[H] = soupsong.title.string
         name_artist = name[H]
@@ -169,6 +169,7 @@ def Snoopy(url , name_csv):
         name_artist_ = name_artist_def[H]
         name_artist_utf8.append(name_artist_.encode("utf-8"))
         print name_artist_def[H]
+        '''
         ######## PLAYLIST POSITION ########
         number_list.append(H+1) 
 
@@ -179,19 +180,31 @@ def Snoopy(url , name_csv):
         value = link_song_spotify_temp[H]
         link_song_spotify_def.append(value.encode("utf-8"))
         id_list.append(value[31:])
-        print id_list[H]
-        print link_song_spotify_temp[H]
+        #print id_list[H]
+        #print link_song_spotify_temp[H]
 
         ######## 30s PREVIEW URL ########
         id_temp = id_list[H]
-        print id_temp
+        #print id_temp
         id_temp_str = str(id_temp)
         urlid = 'https://api.spotify.com/v1/tracks/' + id_temp_str
         headers = {'id':id_temp_str, 'cache-control':"no-cache", 'postman-token':"2bf1de22-4252-d879-e988-6223d70b8e75"}
         response = requests.request("GET", urlid, headers=headers)
-    #print(response.text)
         data = json.loads(response.text)
+        #print data
+        album_song = data['album']
+        artist = album_song['artists']
+        
+        #print album_song
+        #print artist
+        artist_name = artist[0]
+        artist_name_ = artist_name['name']
+        print artist_name_
+        #print id_temp
+        name_artist_def.append(artist_name_)
         preview_url.append(data['preview_url'])
+        print id_list[H]
+        print link_song_spotify_temp[H]
         print(preview_url[H])
         if preview_url[H] != None:
             preview_url[H] = preview_url[H].encode("utf-8")
@@ -206,4 +219,9 @@ def Snoopy(url , name_csv):
  # SAVING IT IN CSV
     with open(name_csv, 'wb') as f:
         writer = csv.writer(f)
-        writer.writerows(izip(number_list, name_songs2, name_artist_utf8, link_songs2, link_song_spotify_def, id_list, preview_url))
+        writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url))
+
+#TO FIRE SNOOPY WITHOUT MOTHERSHIP.py
+#Snoopy(url, name_csv)
+
+
