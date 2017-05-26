@@ -17,6 +17,10 @@ import requests
 import json
 
 
+
+#######################################################
+########## TO FIRE SNOOPY WITHOUT MOTHERSHIP ##########
+
 '''GIVE SPOTONTRACK PLAYLIST URL'''
 #######################################################
 url = 'http://www.spotontrack.com/playlists/379'
@@ -28,6 +32,12 @@ url = 'http://www.spotontrack.com/playlists/379'
 name_csv = 'PLAYLIST: DEEP FOCUS [379].csv'
 #######################################################
 
+########## TO FIRE SNOOPY WITHOUT MOTHERSHIP ##########
+#######################################################
+
+
+'''DO YOU WANNA DOWNLOAD THE 30s SNIPPLET?'''
+DOWNLOAD = "TRUE"
 
 
 def Snoopy(url , name_csv):
@@ -187,6 +197,7 @@ def Snoopy(url , name_csv):
         id_temp = id_list[H]
         #print id_temp
         id_temp_str = str(id_temp)
+        id_list[H] = id_list[H].encode("utf-8")
         urlid = 'https://api.spotify.com/v1/tracks/' + id_temp_str
         headers = {'id':id_temp_str, 'cache-control':"no-cache", 'postman-token':"2bf1de22-4252-d879-e988-6223d70b8e75"}
         response = requests.request("GET", urlid, headers=headers)
@@ -200,6 +211,7 @@ def Snoopy(url , name_csv):
         artist_name = artist[0]
         artist_name_ = artist_name['name']
         print artist_name_
+        artist_name_ = artist_name_.encode("utf-8")
         #print id_temp
         name_artist_def.append(artist_name_)
         preview_url.append(data['preview_url'])
@@ -208,6 +220,11 @@ def Snoopy(url , name_csv):
         print(preview_url[H])
         if preview_url[H] != None:
             preview_url[H] = preview_url[H].encode("utf-8")
+            if DOWNLOAD == "TRUE":
+                
+                name_mp3 = "Song: " + artist_name_ + id_temp_str + ".mp3"
+                urllib.urlretrieve (preview_url[H], name_mp3)
+                print "Song Downloaded"
     
         H = H + 1
     
@@ -222,6 +239,6 @@ def Snoopy(url , name_csv):
         writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url))
 
 #TO FIRE SNOOPY WITHOUT MOTHERSHIP.py
-#Snoopy(url, name_csv)
+Snoopy(url, name_csv)
 
 
