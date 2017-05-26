@@ -76,7 +76,7 @@ def MothershipACTIVATION():
         temp33 = ""
         #temp12 = str(temp11)
 	    #temp23 = str(temp22)
-        temp33 = "ID: " + idlist + " TIME: " + temp01
+        temp33 = "ID: " + idlist + " TIME: " + temp01 + ".csv"
         temp34 = str(temp33)
         csv_list_name.append(temp34)
         #print(csv_list_name[i])
