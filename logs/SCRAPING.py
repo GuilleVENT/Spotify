@@ -136,6 +136,9 @@ name_artist_utf8 = []
 body = []
 bodies = []
 
+preview_url = []
+preview_url_def = []
+
 H = 0
 
 
@@ -176,41 +179,26 @@ while H < len(link_songs2):
     id_list.append(value[31:])
     print id_list[H]
     print link_song_spotify_temp[H]
+
+    ######## 30s PREVIEW URL ########
+    id_temp = id_list[H]
+    print id_temp
+    id_temp_str = str(id_temp)
+    urlid = 'https://api.spotify.com/v1/tracks/' + id_temp_str
+    headers = {'id':id_temp_str, 'cache-control':"no-cache", 'postman-token':"2bf1de22-4252-d879-e988-6223d70b8e75"}
+    response = requests.request("GET", urlid, headers=headers)
+    #print(response.text)
+    data = json.loads(response.text)
+    preview_url.append(data['preview_url'])
+    print(preview_url[H])
+    if preview_url[H] != None:
+        preview_url[H] = preview_url[H].encode("utf-8")
     
-    ######## 30s PREVIEW LINK ########
-    '''
-    bodyn2 = soupsong.html.body.find('iframe')
-    print bodyn2
-    comment = bodyn2.find(text=lambda text:isinstance(text, Comment))
-    print comment
-    '''
-    #bodyn2 = soupsong.html.body.find_all('body')
-    #print bodyn2
-    '''
-    if H ==0:
-        print soupsong.html.body.prettify()
-    '''
-    '''int1 = 0
-    bodies = soupsong.find_all('body')
-    if H==0:
-        while int1 < len(bodies):
-    	    print bodies[int1]
-    	    print "--------------"
-    	    int1= int1+1
-    '''
-    '''
-    print "***********************************************************************************"
-    if H==0:
-        for div in soupsong.find_all('div', {'class' : 'container content'}):
-    	    print "-----------------------------------------------------------------------------"
-    	    print div.prettify()
-    '''	    
     H = H + 1
     
-preview_url = []
-preview_url_def = []
-G = 0
-O = 0
+
+#G = 0
+'''
 while G < len(id_list):
 	id_temp = id_list[G]
 	print id_temp
@@ -225,9 +213,9 @@ while G < len(id_list):
 	if preview_url[G] != None:
 	    preview_url[G] = preview_url[G].encode("utf-8")
 	G = G + 1
+'''
 
-
-print(preview_url)
+#print(preview_url)
 
 # SAVING IT IN CSV
 with open(name_csv, 'wb') as f:
