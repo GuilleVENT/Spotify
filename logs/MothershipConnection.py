@@ -23,13 +23,13 @@ import json
 
 '''GIVE SPOTONTRACK PLAYLIST URL'''
 #######################################################
-#url = 'http://www.spotontrack.com/playlists/379'
+url = 'http://www.spotontrack.com/playlists/379'
 #######################################################
 
 
 '''GIVE NAME TO THE OUTPUT CSV FILE'''
 #######################################################
-#name_csv = 'PLAYLIST: DEEP FOCUS [379].csv'
+name_csv = 'PLAYLIST: DEEP FOCUS [379].csv'
 #######################################################
 
 ########## TO FIRE SNOOPY WITHOUT MOTHERSHIP ##########
@@ -37,7 +37,7 @@ import json
 
 
 '''DO YOU WANNA DOWNLOAD THE 30s SNIPPLET?'''
-DOWNLOAD = "TRUE"
+DOWNLOAD = "FALSE"
 
 
 def Snoopy(url , name_csv):
@@ -150,6 +150,20 @@ def Snoopy(url , name_csv):
 
     preview_url = []
     preview_url_def = []
+
+    danceability = []
+    energy  = []
+    key  = []
+    loudness = []
+    mode = []
+    speechiness = []
+    acousticness = []
+    instrumentalness = []
+    liveness = []
+    valence = []
+    tempo = []
+    duration_ms = []
+    time_signature = []
     
     H = 0
 
@@ -218,6 +232,26 @@ def Snoopy(url , name_csv):
         print id_list[H]
         print link_song_spotify_temp[H]
         print(preview_url[H])
+
+        url_features = "https://api.spotify.com/v1/audio-features/" + id_temp_str
+        headers2 = {'accept': "application/json",'authorization': "Bearer BQDHlGRGG7cbUFZZzMegp2kVeh5RwM0ODJSW8gImmOvuxu2rCYTGgTWpav8HthqYegIuKtfBPlkLtU77I2y8Ew81q9hxSoCmgeQiD11SuBzRmPcCMQiTmMH4TF9-az63sa0WdDbBcNwt7yOPvFRshj413l51j6Yt-4EdE7J6gpbDLHlSDvBm-YcF16TU3AkP2cTAkzQUc4ooz7ErVtueJJ-Ac_m3v5fP3X1U0syGjz4cYQRndEfUPF9wZsVmjnFL7t26DV5ZfNBE-zhILm3uRLsGKFb4jgJFe_MWPzcl2RKVdKee2PXZvM4KA_hg7VPqaNwXmEPDXqn4"}
+        response2 = requests.request("GET", url_features, headers=headers2)
+        features = json.loads(response2.text)
+              
+        danceability.append(features['danceability'])
+        energy.append(features['energy'])
+        key.append(features['key'])
+        loudness.append(features['loudness'])
+        mode.append(features['mode'])
+        speechiness.append(features['speechiness'])
+        acousticness.append(features['acousticness'])
+        instrumentalness.append(features['instrumentalness'])
+        liveness.append(features['liveness']) 
+        valence.append(features['valence'])        
+        tempo.append(features['tempo'])        
+        duration_ms.append(features['duration_ms'])
+        time_signature.append(features['time_signature'])
+
         if preview_url[H] != None:
             preview_url[H] = preview_url[H].encode("utf-8")
             if DOWNLOAD == "TRUE":
@@ -237,9 +271,9 @@ def Snoopy(url , name_csv):
  # SAVING IT IN CSV
     with open(name_csv, 'wb') as f:
         writer = csv.writer(f)
-        writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url))
+        writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url, danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,duration_ms,time_signature))
 
 #TO FIRE SNOOPY WITHOUT MOTHERSHIP.py
-#Snoopy(url, name_csv)
+Snoopy(url, name_csv)
 
 
