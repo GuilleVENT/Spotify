@@ -23,13 +23,13 @@ import json
 
 '''GIVE SPOTONTRACK PLAYLIST URL'''
 #######################################################
-url = 'http://www.spotontrack.com/playlists/379'
+#url = 'http://www.spotontrack.com/playlists/379'
 #######################################################
 
 
 '''GIVE NAME TO THE OUTPUT CSV FILE'''
 #######################################################
-name_csv = 'PLAYLIST: DEEP FOCUS [379].csv'
+#name_csv = 'PLAYLIST: DEEP FOCUS [379].csv'
 #######################################################
 
 ########## TO FIRE SNOOPY WITHOUT MOTHERSHIP ##########
@@ -221,10 +221,11 @@ def Snoopy(url , name_csv):
         if preview_url[H] != None:
             preview_url[H] = preview_url[H].encode("utf-8")
             if DOWNLOAD == "TRUE":
-                
-                name_mp3 = "Song: " + artist_name_ + id_temp_str + ".mp3"
-                urllib.urlretrieve (preview_url[H], name_mp3)
-                print "Song Downloaded"
+                slash = artist_name_.count('/')
+                if slash == 0:  #TO GET OVER THAT BUG JUST FOR NOW ARTIST NAME AU/RA FUCKS IT ALL UP
+                    name_mp3 = "Song: " + str(artist_name_) + " " + id_temp_str + ".mp3"
+                    urllib.urlretrieve (preview_url[H], name_mp3)
+                    print "Song Downloaded"
     
         H = H + 1
     
@@ -239,6 +240,6 @@ def Snoopy(url , name_csv):
         writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url))
 
 #TO FIRE SNOOPY WITHOUT MOTHERSHIP.py
-Snoopy(url, name_csv)
+#Snoopy(url, name_csv)
 
 
