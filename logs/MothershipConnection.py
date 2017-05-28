@@ -38,6 +38,8 @@ name_csv = 'PLAYLIST: DEEP FOCUS [379].csv'
 
 '''DO YOU WANNA DOWNLOAD THE 30s SNIPPLET?'''
 DOWNLOAD = "FALSE"
+'''DO YOU WANNA GET AUDIO FEATURES THROU SPOTIFY API '''
+get_features = "FALSE"
 
 
 def Snoopy(url , name_csv):
@@ -100,8 +102,8 @@ def Snoopy(url , name_csv):
     while b < len(spans):
         bum = spans[b]
         for link2 in bum.find_all('a'):
-		    link_song.append(link2.get('href'))
-		    b = b + 1
+            link_song.append(link2.get('href'))
+        b = b + 1
 
 
     #print "SPANS........................................"
@@ -119,16 +121,16 @@ def Snoopy(url , name_csv):
     count2 = 0 
     link_songs2 = []
     while count2 <len(link_song):
-	    temp = link_song[count2]
-	    temp2 = temp.encode("utf-8")
-	    link_songs2.append(temp2)
-	    count2 = count2 + 1
+	       temp = link_song[count2]
+	       temp2 = temp.encode("utf-8")
+	       link_songs2.append(temp2)
+	       count2 = count2 + 1
 
 #print "SONG LINKS UTF-8..............................."
 #print link_songs2
 
     count = 0 
-    name_songs2 = []
+    name_songs2 = ["Song"]
     while count < len(name_songs):
         temp = name_songs[count]
         temp2 = temp.encode("utf-8")
@@ -138,12 +140,12 @@ def Snoopy(url , name_csv):
 #print "SONG NAMES UTF-8..............................."
 #print name_songs2
 
-    number_list = []
+    number_list = ["Pos."]
     link_song_spotify_temp = []
     link_song_spotify_def  = []
     id_list = []
     name_artist = []
-    name_artist_def =[] 
+    name_artist_def =["Artist"] 
     name_artist_utf8 = []
     body = []
     bodies = []
@@ -151,6 +153,19 @@ def Snoopy(url , name_csv):
     preview_url = []
     preview_url_def = []
 
+    # IF FEATURES FROM SPOTONTRACK
+    feat_BPM   = []
+    feat_KEY   = []
+    feat_Mode  = []
+    feat_Dance = []
+    feat_Valence= []
+    feat_Energy = []
+    feat_Acousticness = []
+    feat_Instrumentalness = []
+    feat_Liveness = []
+    feat_Speechiness = []
+
+   # IF FEATURES FROM SPOTIFY API
     danceability = []
     energy  = []
     key  = []
@@ -168,10 +183,53 @@ def Snoopy(url , name_csv):
     H = 0
 
 
-    while H < len(link_songs2):
+    while H < 5: #len(link_songs2)'''
         ulrsong   =   link_songs2[H]
         oona    =   urllib.urlopen(ulrsong).read()
         soupsong  =   BeautifulSoup(oona, "html.parser")
+
+        feat = soupsong.find('div', {'class':'col-md-3'})
+        #print feat
+        #print "-----"
+        try:
+            feat2 = feat.find_all('div')[4].text.split('\n')
+            #print feat2
+            feat_BPM.append(feat2[1])
+            feat_KEY.append(feat2[4][28:])
+            feat_Mode.append(feat2[7][59:])
+            feat_Dance.append(feat2[9])
+            feat_Valence.append(feat2[11])
+            feat_Energy.append(feat2[13])
+            feat_Acousticness.append(feat2[15])
+            feat_Instrumentalness.append(feat2[17])
+            feat_Liveness.append(feat2[19])
+            feat_Speechiness.append(feat2[21])
+        except IndexError:
+            #in this case call spotify api would not happen very often 
+            feat_BPM.append("None")
+            feat_KEY.append("None")
+            feat_Mode.append("None")
+            feat_Dance.append("None")
+            feat_Valence.append("None")
+            feat_Energy.append("None")
+            feat_Acousticness.append("None")
+            feat_Instrumentalness.append("None")
+            feat_Liveness.append("None")
+            feat_Speechiness.append("None")
+      
+        print "+++++"
+        print feat_BPM[H]
+        print "KEY: " + feat_KEY[H]   #sehr komisch aber whatever ist nicht wichtig
+        print "MODE: " + feat_Mode[H] #hier auch, whatever ! solutionated 
+        print feat_Dance[H]
+        print feat_Valence[H]         # WENN ICH NUR DIE ZAHL HABEN WILL MUSS ICH NUR DEN STRING SCHNEIDEN 
+        print feat_Energy[H]
+        print feat_Acousticness[H]
+        print feat_Instrumentalness[H]
+        print feat_Liveness[H]
+        print feat_Speechiness[H]
+
+
         '''
         ######## ARTIST NAME ########
         name[H] = soupsong.title.string
@@ -199,6 +257,7 @@ def Snoopy(url , name_csv):
 
         ######## LINKS and ID's ########
         conect = soupsong.find('a', {'target' : '_blank' , 'class' : 'btn-u btn-block btn-u margin-bottom-10'})
+
 
         link_song_spotify_temp.append(conect.get('href'))
         value = link_song_spotify_temp[H]
@@ -232,26 +291,28 @@ def Snoopy(url , name_csv):
         print id_list[H]
         print link_song_spotify_temp[H]
         print(preview_url[H])
+        # FEATURES THROUGH SPOTIFY API.
+        '''
+        if get_features == "TRUE":
+            url_features = "https://api.spotify.com/v1/audio-features/" + id_temp_str
+            headers2 = {'accept': "application/json",'authorization': "Bearer BQDHlGRGG7cbUFZZzMegp2kVeh5RwM0ODJSW8gImmOvuxu2rCYTGgTWpav8HthqYegIuKtfBPlkLtU77I2y8Ew81q9hxSoCmgeQiD11SuBzRmPcCMQiTmMH4TF9-az63sa0WdDbBcNwt7yOPvFRshj413l51j6Yt-4EdE7J6gpbDLHlSDvBm-YcF16TU3AkP2cTAkzQUc4ooz7ErVtueJJ-Ac_m3v5fP3X1U0syGjz4cYQRndEfUPF9wZsVmjnFL7t26DV5ZfNBE-zhILm3uRLsGKFb4jgJFe_MWPzcl2RKVdKee2PXZvM4KA_hg7VPqaNwXmEPDXqn4"}
+            response2 = requests.request("GET", url_features, headers=headers2)
+            features = json.loads(response2.text)
 
-        url_features = "https://api.spotify.com/v1/audio-features/" + id_temp_str
-        headers2 = {'accept': "application/json",'authorization': "Bearer BQDHlGRGG7cbUFZZzMegp2kVeh5RwM0ODJSW8gImmOvuxu2rCYTGgTWpav8HthqYegIuKtfBPlkLtU77I2y8Ew81q9hxSoCmgeQiD11SuBzRmPcCMQiTmMH4TF9-az63sa0WdDbBcNwt7yOPvFRshj413l51j6Yt-4EdE7J6gpbDLHlSDvBm-YcF16TU3AkP2cTAkzQUc4ooz7ErVtueJJ-Ac_m3v5fP3X1U0syGjz4cYQRndEfUPF9wZsVmjnFL7t26DV5ZfNBE-zhILm3uRLsGKFb4jgJFe_MWPzcl2RKVdKee2PXZvM4KA_hg7VPqaNwXmEPDXqn4"}
-        response2 = requests.request("GET", url_features, headers=headers2)
-        features = json.loads(response2.text)
-              
-        danceability.append(features['danceability'])
-        energy.append(features['energy'])
-        key.append(features['key'])
-        loudness.append(features['loudness'])
-        mode.append(features['mode'])
-        speechiness.append(features['speechiness'])
-        acousticness.append(features['acousticness'])
-        instrumentalness.append(features['instrumentalness'])
-        liveness.append(features['liveness']) 
-        valence.append(features['valence'])        
-        tempo.append(features['tempo'])        
-        duration_ms.append(features['duration_ms'])
-        time_signature.append(features['time_signature'])
-
+            danceability.append(features['danceability'])
+            energy.append(features['energy'])
+            key.append(features['key'])
+            loudness.append(features['loudness'])
+            mode.append(features['mode'])
+            speechiness.append(features['speechiness'])
+            acousticness.append(features['acousticness'])
+            instrumentalness.append(features['instrumentalness'])
+            liveness.append(features['liveness']) 
+            valence.append(features['valence'])        
+            tempo.append(features['tempo'])        
+            duration_ms.append(features['duration_ms'])
+            time_signature.append(features['time_signature'])
+        '''
         if preview_url[H] != None:
             preview_url[H] = preview_url[H].encode("utf-8")
             if DOWNLOAD == "TRUE":
@@ -261,7 +322,7 @@ def Snoopy(url , name_csv):
                     urllib.urlretrieve (preview_url[H], name_mp3)
                     print "Song Downloaded"
     
-        H = H + 1
+        H = H+1
     
 
 
@@ -271,7 +332,7 @@ def Snoopy(url , name_csv):
  # SAVING IT IN CSV
     with open(name_csv, 'wb') as f:
         writer = csv.writer(f)
-        writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url, danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,duration_ms,time_signature))
+        writer.writerows(izip(number_list, name_songs2, name_artist_def, link_songs2, link_song_spotify_def, id_list, preview_url, feat_BPM,feat_Dance,feat_KEY ,feat_Mode,feat_Energy,feat_Valence,feat_Acousticness,feat_Instrumentalness,feat_Speechiness,feat_Liveness))
 
 #TO FIRE SNOOPY WITHOUT MOTHERSHIP.py
 Snoopy(url, name_csv)
